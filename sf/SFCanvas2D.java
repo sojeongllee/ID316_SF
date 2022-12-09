@@ -85,8 +85,10 @@ public class SFCanvas2D extends JPanel {
         g2.transform(this.mSF.getXform().getCurXformFromWorldToScreen()); 
         
         //render common world objects.
+        this.drawPaper(g2);
         this.drawPtCurves(g2);
         this.drawSelectedPtCurves(g2);
+        
 //        this.drawCurPtCurve(g2);
         
         //render the current scene's world objects
@@ -230,5 +232,28 @@ public class SFCanvas2D extends JPanel {
             this.mSF.getColorChooser().drawCells(g2, this.getWidth(),
                 this.getHeight());
         }
+    }
+    
+    public static final Color COLOR_FRONT = new Color(243, 120, 250, 255);
+    public static final Color COLOR_BACK = new Color(134, 115, 245, 255);
+    public static final Stroke STROKE_FOR_ORIGAMI = new BasicStroke(1f);
+    
+    private void drawPaper(Graphics g2) {
+//        SFScene curScene = (SFScene) this.mSF.getScenarioMgr().getCurScene();
+        SFOriStepMgr orismgr = this.mSF.getOriStepMgr();
+//        int step = this.mSF.getOriStepMgr().getStep();
+        if(orismgr.getLastOriStep() != null){
+            int numpoly = orismgr.getLastOriStep().getPolygons().size();
+            for(int i = 0; i < numpoly ; i++) {
+                SFPoly polygon = orismgr.getLastOriStep().getPolygons().get(i);
+                if(orismgr.getLastOriStep().getPolygons().get(i).getFace()){
+                    g2.setColor(COLOR_FRONT);
+                } else {
+                    g2.setColor(COLOR_BACK);
+                }
+                g2.fillPolygon(polygon);
+            }
+        }
+        
     }
 }

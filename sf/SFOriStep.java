@@ -1,6 +1,5 @@
 package sf;
 
-import java.awt.Polygon;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 

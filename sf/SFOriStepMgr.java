@@ -7,14 +7,23 @@ import java.util.ArrayList;
 public class SFOriStepMgr {
     
     //fields
+    private int mStep = 0;
+    public int getStep() {
+        return this.mStep;
+    }
+    public void addStep() {
+        this.mStep += 1;
+    }
+    
     private ArrayList<SFOriStep> mOrigami = null;
     public ArrayList<SFOriStep> getOrigami() {
         return this.mOrigami;
     }
     
     //constuctor
-    public SFOriStepMgr(){
+    public SFOriStepMgr(SF sf){
         this.mOrigami = new ArrayList<>();
+        this.mStep = 0;
     }
     
     

@@ -17,6 +17,7 @@ public class SF extends XApp {
     public XLogMgr getLogMgr() {
         return this.mLogMgr;
     }
+   
     
     // fields
     private JFrame mFrame = null;
@@ -41,13 +42,21 @@ public class SF extends XApp {
         return this.mColorChooser;
     }
     
-
-    
     private SFEventListener mEventListener = null;
     private SFPtCurveMgr mPtCurveMgr = null;
     public SFPtCurveMgr getSFPtCurveMgr() {
         return this.mPtCurveMgr;
     }
+    
+    // for origami
+    private SFOriStepMgr mOriStepMgr = null;
+    public SFOriStepMgr getOriStepMgr() {
+        return this.mOriStepMgr;
+    }
+    
+    
+    
+    
     
     // constructor
     public SF() {
@@ -61,6 +70,9 @@ public class SF extends XApp {
         this.mScenarioMgr = new SFScenarioMgr(this);
         this.mLogMgr = new XLogMgr();
         this.mLogMgr.setPrintOn(true);
+        
+        //for origami
+        this.mOriStepMgr = new SFOriStepMgr(this);
         
         // connect event listeners
         this.mCanvas2D.addMouseListener(this.mEventListener);

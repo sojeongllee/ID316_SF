@@ -6,13 +6,14 @@ import java.awt.Polygon;
 public class SFPoly extends Polygon {
     //fields
     private boolean mFace = true;
-    public boolean getIsFace() {
+    public boolean getFace() {
         return mFace;
     }
     
     //constructor
-    public SFPoly() {
-        
+    public SFPoly(int[] xpts, int[] ypts, int num, boolean face) {
+        super(xpts, ypts, num);
+        this.mFace = face;
     }
     
     //methods
