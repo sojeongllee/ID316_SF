@@ -16,6 +16,10 @@ public class SFOriStep {
         return this.mPolygons;
     }
     
+    
+    
+    
+    
     private ArrayList<Point2D.Double> mFoldLine = null;
     public ArrayList<Point2D.Double> getFoldLine() {
         return this.mFoldLine;
@@ -40,7 +44,7 @@ public class SFOriStep {
     }
     
     //constructor
-    public SFOriStep(int step, ArrayList<SFPoly> poly) { //여기서 애초에 계산이 다 된 arraylist를 받을지 아님 addpoly를 써서 폴리곤 하나하나 추가할지?
+    public SFOriStep(int step, ArrayList<SFPoly> poly) {
         this.mStep = step;
         this.mPolygons = poly;
         this.mFoldLine = new ArrayList<>();
@@ -53,4 +57,5 @@ public class SFOriStep {
             this.mPolygons.add(poly);
         }
     }
+    
 }

@@ -1,6 +1,7 @@
 package sf.cmd;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import sf.SF;
 import sf.SFOriStep;
@@ -30,11 +31,11 @@ public class SFCmdToInitializePaper extends XLoggableCmd {
         SF sf = (SF) this.mApp;
         if(sf.getOriStepMgr().getOrigami().isEmpty()) {
             ArrayList<SFPoly> poly = new ArrayList<>();
-            int[] xs = {0, 0, 400, 400};
-            int[] ys = {0, 400, 400, 0};
-            int numpts = xs.length;
-            SFPoly firstpaper = new SFPoly(xs, ys, numpts, true);
-            poly.add(firstpaper);
+            int[] xPts = {0,0,400,400};
+            int[] yPts = {0,400,400,0};
+            int numPts = xPts.length;
+            SFPoly firstpaper = new SFPoly(xPts, yPts, numPts, true);
+            poly.add(firstpaper);   
             SFOriStep firststep = new SFOriStep(0, poly);
             sf.getOriStepMgr().addOriStep(firststep);
             System.out.println(sf.getOriStepMgr().getLastOriStep());

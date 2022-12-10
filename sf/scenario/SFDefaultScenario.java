@@ -82,6 +82,7 @@ public class SFDefaultScenario extends XScenario {
         public void handleMouseRelease(MouseEvent e) {
             SF sf = (SF) this.mScenario.getApp();
             SFCmdToAddCurPtCurveToPtCurves.execute(sf);
+            SFDefaultScenario scenario = (SFDefaultScenario) this.mScenario;
         }
 
         @Override
@@ -136,6 +137,7 @@ public class SFDefaultScenario extends XScenario {
         public void renderScreenObjects(Graphics2D g2) {
             SFDefaultScenario scenario = (SFDefaultScenario) this.mScenario;
             Path2D.Double foldline = (Path2D.Double) scenario.makefoldline(g2);
+            scenario.foldpaper(foldline);
         }
 
         @Override
@@ -148,6 +150,8 @@ public class SFDefaultScenario extends XScenario {
 
         }
     }
+    
+//    public Path2D.Double foldline = null;
     
     public Path2D makefoldline(Graphics2D g2){
         SF sf = (SF) super.getApp();
@@ -168,30 +172,31 @@ public class SFDefaultScenario extends XScenario {
         return path;
     }
     
-//    public Point2D.Double intersect(Point2D.Double poly_1, Point2D.Double poly_2, 
-//        Point2D.Double line_1, Point2D.Double line_2) {
-//        double poly_a, poly_b, poly_c, line_a, line_b, line_c = NaN;
-//        if(poly_1.x != poly_2.x) {
-//            poly_a =(poly_2.y - poly_1.y)/(poly_2.x-poly_1.x);
-//            poly_b = poly_1.y - poly_a*poly_1.x;
-//        } else {
-//            poly_c = poly_1.x;
-//        }
-//        
-//        if(line_1.x != line_2.x) {
-//            line_a =(line_2.y - line_1.y)/(line_2.x-line_1.x);
-//            line_b = line_1.y - line_a*line_1.x;
-//        } else{
-//            line_c = line_1.x;
-//        }
-//        
-//        if(poly_c != NaN && line_c != NaN) {
-//            
-//        }
-//        
-//    }
+    public Point2D.Double intersect(Point firstpt, Point lastpt, 
+        Point2D.Double pt1, Point2D.Double pt2) {
+        double x1 = firstpt.x, y1 = firstpt.y, x2 = lastpt.x, y2 = lastpt.y, x3 = pt1.x, y3 = pt2.y,
+                x4 = pt2.x, y4 = pt2.y;
+        double d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+        if (d == 0) {
+            return null;
+        }
+
+        double xi = ((x3 - x4) * (x1 * y2 - y1 * x2) - (x1 - x2) * (x3 * y4 - y3 * x4)) / d;
+        double yi = ((y3 - y4) * (x1 * y2 - y1 * x2) - (y1 - y2) * (x3 * y4 - y3 * x4)) / d;
+        Point2D.Double intersectpt = new Point2D.Double(xi, yi);
+        
+        Path2D.Double edge = new Path2D.Double();
+        edge.moveTo(pt1.x, pt1.y);
+        edge.moveTo(pt2.x, pt2.y);
+        
+        if(edge.contains(intersectpt)) {
+            return intersectpt;
+        } else{
+            return null;
+        }
+    }
     
-    public void foldpaper(Graphics2D g2, Path2D.Double foldline){
+    public void foldpaper(Path2D.Double foldline){
         // 만들어진 foldline은 해당 step에 저장
         // 각 poly마다 겹치는 두 점을 찾고 foldline의 기울기가 양수면 -> 그 점보다 왼쪽 위 -> poly_1, 왼쪽 아래->poly_2 
         // 기울기가 음수면 -> 그 점보다 오른쪽 위 이런식으로 나눔
@@ -199,17 +204,26 @@ public class SFDefaultScenario extends XScenario {
         // 지금 문제가 겹치는 포인트를 어케 찾을지임 시발...
         SF sf = (SF) super.getApp();
         ArrayList<SFPoly> lastpolys = sf.getOriStepMgr().getLastOriStep().getPolygons();
-        ArrayList<Point2D.Double> intersectpt = new ArrayList<>();
+        
         Point firstpt = sf.getSFPenMarkMgr().getLastPenMark().getFirstPt();
         Point lastpt = sf.getSFPenMarkMgr().getLastPenMark().getLastPt();
         int numpoly = lastpolys.size();
+        
+        // find intersectPts(startPt, endPt)
+        ArrayList<Point2D.Double> intersectPts = new ArrayList<>();
         for(int i = 0; i < numpoly ; i++){
             SFPoly poly = lastpolys.get(i);
             int numpts = poly.npoints;
             for(int j = 0; j < numpts ; j++) {
-                
+                Point2D.Double pt1 = new Point2D.Double(poly.xpoints[j], poly.ypoints[j]);
+                Point2D.Double pt2 = new Point2D.Double(poly.xpoints[j+1], poly.ypoints[j+1]);
+                Point2D.Double interpt = intersect(firstpt, lastpt, pt1, pt2);
+                if(interpt != null) {
+                    intersectPts.add(interpt);
+                }
             }
         }
+        System.out.println(intersectPts);
         
     }
     

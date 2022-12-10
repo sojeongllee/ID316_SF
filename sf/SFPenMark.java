@@ -2,6 +2,7 @@ package sf;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+//import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 
@@ -12,22 +13,17 @@ public class SFPenMark {
         return this.mPts;
     }
     
-    private Rectangle mBoundingBox = null;
-    public Rectangle getBoundingBox() {
-        return this.mBoundingBox;
-    }
-    
     //constructor
     public SFPenMark(Point pt) {
         this.mPts = new ArrayList<Point>();
         this.mPts.add(pt);
-        this.mBoundingBox = new Rectangle(pt.x, pt.y, 0, 0);
+//        this.mBoundingBox = new Rectangle(pt.x, pt.y, 0, 0);
     }
     
     public void addPt(Point pt) {
         assert (this.mPts.size() > 0);
         this.mPts.add(pt);
-        this.mBoundingBox.add(pt);
+//        this.mBoundingBox.add(pt);
     }
     
     public Point getFirstPt() {

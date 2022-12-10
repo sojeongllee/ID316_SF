@@ -68,7 +68,7 @@ public class SFFoldScenario extends XScenario {
             if(SFCmdToTestValidLine.execute(sf)){
                 XCmdToChangeScene.execute(sf, SFFoldScenario.SelectUpperFaceScene.getSingleton(), this.mReturnScene);
             } else {
-                XCmdToDeleteFoldingline.execute(sf);
+                SFCmdToDeleteFoldingline.execute(sf);
                 XCmdToChangeScene.execute(sf, SFDefaultScenario.ReadyScene.getSingleton(), null);
             }
         }
