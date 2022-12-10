@@ -1,7 +1,9 @@
 package sf;
 
+import sf.scenario.SFColorScenario;
 import sf.scenario.SFCutScenario;
 import sf.scenario.SFDefaultScenario;
+import sf.scenario.SFFoldScenario;
 //import sf.scenario.SFDrawScenario;
 import sf.scenario.SFNavigateScenario;
 import sf.scenario.SFPaperStatusScenario;
@@ -17,11 +19,13 @@ public class SFScenarioMgr extends XScenarioMgr {
     @Override
     protected void addScenarios() {
         this.addScenarios(SFDefaultScenario.createSingleton(this.mApp));
+        this.addScenarios(SFFoldScenario.createSingleton(this.mApp));
 //        this.addScenarios(SFDrawScenario.createSingleton(this.mApp));
 //        this.addScenarios(SFSelectScenario.createSingleton(this.mApp));
         this.addScenarios(SFNavigateScenario.createSingleton(mApp));
         this.addScenarios(SFPaperStatusScenario.createSingleton(mApp));
         this.addScenarios(SFCutScenario.createSingleton(mApp));
+        this.addScenarios(SFColorScenario.createSingleton(mApp));
     }
 
     @Override

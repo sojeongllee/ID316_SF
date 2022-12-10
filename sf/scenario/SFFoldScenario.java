@@ -1,11 +1,20 @@
 package sf.scenario;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import sf.SF;
+import sf.SFFoldLine;
+import sf.SFPtCurve;
 import sf.SFScene;
+import sf.cmd.SFCmdToFoldPaper;
+import sf.cmd.SFCmdToUpdateCurPtCurve;
+import sf.cmd.SFCmdToUpdateFoldLine;
 import x.XApp;
 import x.XCmdToChangeScene;
 import x.XScenario;
@@ -59,18 +68,23 @@ public class SFFoldScenario extends XScenario {
         public void handleMouseDrag(MouseEvent e) {
             SF sf = (SF) this.mScenario.getApp();
             Point pt = e.getPoint();
-            SFCmdToUpdateFoldingline.execute(sf, pt);
+            SFCmdToUpdateCurPtCurve.execute(sf, pt);
         }
 
         @Override
         public void handleMouseRelease(MouseEvent e) {
             SF sf = (SF) this.mScenario.getApp();
-            if(SFCmdToTestValidLine.execute(sf)){
-                XCmdToChangeScene.execute(sf, SFFoldScenario.SelectUpperFaceScene.getSingleton(), this.mReturnScene);
-            } else {
-                SFCmdToDeleteFoldingline.execute(sf);
+            Point pt = e.getPoint();
+//            if(SFCmdToTestValidLine.execute(sf)){
+//                XCmdToChangeScene.execute(sf, SFFoldScenario.SelectUpperFaceScene.getSingleton(), this.mReturnScene);
+//            } else {
+//                SFCmdToDeleteFoldingline.execute(sf);
+                SFCmdToUpdateFoldLine.execute(sf, pt);
+                SFFoldLine foldline = SFDefaultScenario.getSingleton().getFoldLine();
+                foldline.setEndPt(pt);
+                SFCmdToFoldPaper.execute(sf, foldline);
                 XCmdToChangeScene.execute(sf, SFDefaultScenario.ReadyScene.getSingleton(), null);
-            }
+//            }
         }
 
         @Override
@@ -95,7 +109,9 @@ public class SFFoldScenario extends XScenario {
 
         @Override
         public void renderScreenObjects(Graphics2D g2) {
-
+            SF sf = (SF) this.mScenario.getApp();
+            SFFoldScenario scenario = (SFFoldScenario) this.mScenario;
+            scenario.drawFoldLine(g2);
         }
 
         @Override
@@ -167,7 +183,9 @@ public class SFFoldScenario extends XScenario {
 
         @Override
         public void renderScreenObjects(Graphics2D g2) {
-
+            SF sf = (SF) this.mScenario.getApp();
+            
+            
         }
 
         @Override
@@ -181,4 +199,23 @@ public class SFFoldScenario extends XScenario {
         }
     }
     
+    public void drawFoldLine(Graphics2D g2) {
+        SF sf = (SF) super.getApp();
+        if(SFDefaultScenario.getSingleton().getFoldLine() != null) {
+            Path2D.Double path = new Path2D.Double();
+            if(sf.getSFPenMarkMgr().getLastPenMark() != null){
+            Point firstpt = sf.getSFPenMarkMgr().getLastPenMark().getFirstPt();
+            Point lastpt = sf.getSFPenMarkMgr().getLastPenMark().getLastPt();
+            ArrayList<Point2D> pts = new ArrayList<>();
+            pts.add(firstpt);
+            pts.add(lastpt);
+            Point2D pt0 = pts.get(0);
+            path.moveTo(pt0.getX(), pt0.getY());
+            pt0 = pts.get(1);
+            path.lineTo(pt0.getX(), pt0.getY());
+            g2.setColor(Color.black);
+            g2.draw(path);
+            }
+        }
+    }
 }
